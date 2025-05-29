@@ -4,8 +4,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { useAppSelector } from "./redux/hook";
 import Auth from "./features/auth/Auth";
+import Dashboard from "./features/dashboard/Dashboard";
+import { useAppSelector } from "./redux/hook";
 
 function App() {
   const { isAuthenticated, user } = useAppSelector((state) => state.auth);
@@ -20,6 +21,16 @@ function App() {
               <Auth />
             ) : (
               <Navigate to={user?.role === "admin" ? "/admin" : "/player"} />
+            )
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            isAuthenticated && user?.role === "admin" ? (
+              <Dashboard />
+            ) : (
+              <Navigate to="/sign-in" />
             )
           }
         />
