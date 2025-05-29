@@ -6,16 +6,10 @@ import { Link } from "react-router-dom";
 const Player = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { bananaCount } = useAppSelector((state) => state.player);
+  const { isConnected } = useAppSelector((state) => state.socket);
   const dispatch = useAppDispatch();
 
-//   if (!isAuthenticated) {
-//     console.log({isAuthenticated});
-//     window.location.href = "/sign-in";
-//     return null;
-//   }
-
   const handleBananaClick = () => {
-    console.log("clicked");
     socketService.emitBananaClick();
   };
 
@@ -32,7 +26,10 @@ const Player = () => {
               View Rankings
             </Link>
             <button
-              onClick={() => dispatch(logout())}
+              onClick={() => {
+                socketService.disconnect();
+                dispatch(logout());
+              }}
               className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
             >
               Logout
@@ -42,11 +39,23 @@ const Player = () => {
         <div className="bg-white p-6 rounded shadow-md text-center">
           <h3 className="text-xl font-bold mb-4">Welcome, {user?.username}!</h3>
           <p className="text-lg mb-4">
-            Your Banana Count: <span className="font-bold">{bananaCount}</span>
+            Your Banana Count:{" "}
+            <span className="font-bold">{bananaCount ?? "Loading..."}</span>
+          </p>
+          <p className="text-sm mb-4">
+            Socket Status:{" "}
+            <span className={isConnected ? "text-green-500" : "text-red-500"}>
+              {isConnected ? "Connected" : "Disconnected"}
+            </span>
           </p>
           <button
             onClick={handleBananaClick}
-            className="bg-yellow-500 text-black p-2 rounded-full text-lg font-bold hover:bg-yellow-600"
+            className={`bg-yellow-500 text-black p-4 rounded-full text-xl font-bold ${
+              isConnected
+                ? "hover:bg-yellow-600"
+                : "opacity-50 cursor-not-allowed"
+            }`}
+            disabled={!isConnected}
           >
             🍌 Click the Banana!
           </button>

@@ -29,7 +29,7 @@ const Ranks = () => {
             </thead>
             <tbody>
               {ranking.map((user, index) => (
-                <tr key={user.id}>
+                <tr key={index+1}>
                   <td className="p-2">{index + 1}</td>
                   <td className="p-2">{user.username}</td>
                   <td className="p-2">{user.email}</td>

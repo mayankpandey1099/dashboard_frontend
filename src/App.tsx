@@ -9,9 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<ProtectedRoute />}>
-          <Route path="/sign-in" element={<Auth />} />
-        </Route>
+        <Route path="/sign-in" element={<Auth />} />
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/admin" element={<Dashboard />} />
         </Route>
@@ -19,7 +17,7 @@ function App() {
           <Route path="/player" element={<Player />} />
           <Route path="/ranks" element={<Ranks />} />
         </Route>
-        <Route path="*" element={<Auth />} />
+        <Route path="/" element={<Auth />} />
       </Routes>
     </Router>
   );

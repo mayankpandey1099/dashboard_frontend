@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { login } from "./authSlice";
 import { useNavigate } from "react-router-dom";
+import { socketService } from "../../utils/socket";
 
 const Auth = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -19,6 +20,14 @@ const Auth = () => {
     setError("");
     try {
       const result = await dispatch(login(formData)).unwrap();
+      const token = localStorage.getItem("token");
+      if (token) {
+        console.log("Initiating socket connection with token");
+        socketService.connect(token);
+      } else {
+        console.error("No token found after login");
+        setError("Login succeeded, but no token was found");
+      }
       navigate(result.role === "admin" ? "/admin" : "/player");
     } catch (err: any) {
       setError(err.message || "Login failed");
