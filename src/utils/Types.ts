@@ -28,18 +28,6 @@ export interface RegisterInput {
 }
 
 export interface LoginInput {
-  username: string;
+  email: string;
   password: string;
-}
-
-export interface DashboardState {
-  activeUsers: User[];
-}
-
-export interface PlayerState {
-  bananaCount: number;
-}
-
-export interface RanksState {
-  ranking: User[];
 }

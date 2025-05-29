@@ -1,5 +1,4 @@
 import axios from "axios";
-import { store } from "../redux/store";
 
 const API_URL = import.meta.env.VITE_APP_BASE_URL;
 
@@ -21,10 +20,6 @@ axiosApi.interceptors.request.use(
 axiosApi.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      localStorage.clear();
-      window.location.href = "/sign-in";
-    }
     return Promise.reject(error);
   }
 );
