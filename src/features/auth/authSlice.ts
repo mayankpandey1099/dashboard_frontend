@@ -10,7 +10,6 @@ export const login = createAsyncThunk(
       if (response.data.status !== 200) {
         return rejectWithValue(response.data.message);
       }
-      console.log({response});
       localStorage.setItem("token", response.data.data!.token);
       return response.data.data!.user;
     } catch (error: any) {

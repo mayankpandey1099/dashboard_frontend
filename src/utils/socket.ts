@@ -51,22 +51,18 @@ export class SocketService {
     });
 
     this.socket.on("bananaCount", (data: { bananaCount: number }) => {
-      console.log("Received bananaCount:", data);
       store.dispatch(setBananaCount(data));
     });
 
     this.socket.on("activeUsers", (users: User[]) => {
-      console.log("Received activeUsers:", users);
       store.dispatch(setActiveUsers(users));
     });
 
     this.socket.on("ranking", (users: User[]) => {
-      console.log("Received ranking:", users);
       store.dispatch(setRanking(users));
     });
 
     this.socket.on("userStatus", (data: { id: string; isActive: boolean }) => {
-      console.log("Received userStatus:", data);
       store.dispatch(
         setActiveUsers(
           store
