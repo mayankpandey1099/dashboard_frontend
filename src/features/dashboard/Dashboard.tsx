@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../redux/hook";
 import {
   registerUser,
@@ -9,9 +9,10 @@ import {
 } from "./fetch_helper";
 import { logout } from "../auth/authSlice";
 import { setActiveUsers } from "./dashboardSlice";
-import type { User } from "../../utils/Types";
+import { socketService } from "../../utils/socket";
 
 const Dashboard = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const { activeUsers } = useAppSelector((state) => state.dashboard);
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -49,9 +50,7 @@ const Dashboard = () => {
         }
       } else {
         const response = await registerUser(formData);
-        if (response.data.status === 201) {
-          dispatch(setActiveUsers([...activeUsers, response.data.data!]));
-        } else {
+        if (response.data.status !== 201) {
           setError(response.data.message);
         }
       }
@@ -61,8 +60,8 @@ const Dashboard = () => {
     }
   };
 
-  const handleEdit = (user: User) => {
-    setEditId(user.id);
+  const handleEdit = (user: any) => {
+    setEditId(user._id);
     setFormData({
       username: user.username,
       email: user.email,
@@ -76,7 +75,7 @@ const Dashboard = () => {
     try {
       const response = await deleteUser(id);
       if (response.data.status === 200) {
-        dispatch(setActiveUsers(activeUsers.filter((user: any) => user.id !== id)));
+        dispatch(setActiveUsers(activeUsers.filter((user: any) => user._id !== id)));
       } else {
         setError(response.data.message);
       }
@@ -93,7 +92,7 @@ const Dashboard = () => {
         dispatch(
           setActiveUsers(
             activeUsers.map((user: any) =>
-              user.id === id ? { ...user, isBlocked: true } : user
+              user._id === id ? { ...user, isBlocked: true } : user
             )
           )
         );
@@ -113,7 +112,7 @@ const Dashboard = () => {
         dispatch(
           setActiveUsers(
             activeUsers.map((user: any) =>
-              user.id === id ? { ...user, isBlocked: false } : user
+              user._id === id ? { ...user, isBlocked: false } : user
             )
           )
         );
@@ -125,13 +124,21 @@ const Dashboard = () => {
     }
   };
 
+  const filteredUsers = activeUsers.filter((u) => u._id !== user?.id);
+  
+  useEffect(() => {
+  }, [activeUsers]);
+
   return (
     <div className="min-h-screen p-8 bg-gray-100">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Admin Dashboard</h2>
           <button
-            onClick={() => dispatch(logout())}
+            onClick={() => {
+                            socketService.disconnect();
+                            dispatch(logout());
+                          }}
             className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
           >
             Logout
@@ -215,7 +222,7 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {activeUsers.map((user: any) => (
+              {filteredUsers.map((user: any) => (
                 <tr key={user.id}>
                   <td className="p-2">{user.username}</td>
                   <td className="p-2">{user.email}</td>
@@ -231,21 +238,21 @@ const Dashboard = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(user.id)}
+                      onClick={() => handleDelete(user._id)}
                       className="bg-red-500 text-white p-1 rounded mr-2 hover:bg-red-600"
                     >
                       Delete
                     </button>
                     {user.isBlocked ? (
                       <button
-                        onClick={() => handleUnblock(user.id)}
+                        onClick={() => handleUnblock(user._id)}
                         className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
                       >
                         Unblock
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleBlock(user.id)}
+                        onClick={() => handleBlock(user._id)}
                         className="bg-orange-500 text-white p-1 rounded hover:bg-orange-600"
                       >
                         Block

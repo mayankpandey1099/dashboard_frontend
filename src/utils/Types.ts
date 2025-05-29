@@ -33,7 +33,7 @@ export interface LoginInput {
 }
 
 export interface DashboardState {
-  activeUsers: User[];
+  activeUsers: any[];
 }
 
 export interface PlayerState {

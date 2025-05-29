@@ -71,8 +71,8 @@ export class SocketService {
         setActiveUsers(
           store
             .getState()
-            .dashboard.activeUsers.map((user) =>
-              user.id === data.id ? { ...user, isActive: data.isActive } : user
+            .dashboard.activeUsers.map((user: any) =>
+              user._id === data.id ? { ...user, isActive: data.isActive } : user
             )
         )
       );
