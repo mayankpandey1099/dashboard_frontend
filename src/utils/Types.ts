@@ -35,3 +35,11 @@ export interface LoginInput {
 export interface DashboardState {
   activeUsers: User[];
 }
+
+export interface PlayerState {
+  bananaCount: number;
+}
+
+export interface RanksState {
+  ranking: User[];
+}

@@ -13,7 +13,7 @@ import type { User } from "../../utils/Types";
 
 const Dashboard = () => {
   const { activeUsers } = useAppSelector((state) => state.dashboard);
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     username: "",
@@ -24,7 +24,7 @@ const Dashboard = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [error, setError] = useState("");
 
-  if (!isAuthenticated || user?.role !== "admin") {
+  if (!isAuthenticated) {
     window.location.href = "/sign-in";
     return null;
   }
