@@ -11,6 +11,7 @@ export const login = createAsyncThunk(
         return rejectWithValue(response.data.message);
       }
       localStorage.setItem("token", response.data.data!.token);
+      localStorage.setItem("user", response.data.data!.user);
       return response.data.data!.user;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || "Login failed");
@@ -19,7 +20,7 @@ export const login = createAsyncThunk(
 );
 
 const initialState: AuthState = {
-  user: null,
+  user: localStorage.getItem("user") || null,
   token: localStorage.getItem("token"),
   isAuthenticated: !!localStorage.getItem("token"),
 };
@@ -33,6 +34,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
