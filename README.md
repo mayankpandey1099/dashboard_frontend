@@ -117,6 +117,8 @@ npm install react react-dom react-router-dom @reduxjs/toolkit react-redux socket
    Access at `http://localhost:5173`.
 
 3. **Test Features**
+   - **LoginEmail**: test@gmail.com
+   - **LoginPassword**: test
    - **Login**: Navigate to `/sign-in`, enter credentials (e.g., username: `test`, password: `test123`).
    - **Player Dashboard**: At `/player`, click the banana button, check banana count updates, view rankings at `/ranks`.
    - **Admin Dashboard**: At `/admin` (admin only), view active users, block a user, unblock, edit and delete user.
