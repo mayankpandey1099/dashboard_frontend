@@ -122,10 +122,7 @@ const Dashboard = () => {
     } catch (err: any) {
       setError(err.message || "Unblock failed");
     }
-  };
-
-  const filteredUsers = activeUsers.filter((u) => u._id !== user?.id);
-  
+  }; 
   useEffect(() => {
   }, [activeUsers]);
 
@@ -136,9 +133,9 @@ const Dashboard = () => {
           <h2 className="text-2xl font-bold">Admin Dashboard</h2>
           <button
             onClick={() => {
-                            socketService.disconnect();
-                            dispatch(logout());
-                          }}
+              socketService.disconnect();
+              dispatch(logout());
+            }}
             className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
           >
             Logout
@@ -222,38 +219,49 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user: any) => (
-                <tr key={user.id}>
-                  <td className="p-2">{user.username}</td>
-                  <td className="p-2">{user.email}</td>
-                  <td className="p-2">{user.bananaCount}</td>
+              {activeUsers.map((userData: any) => (
+                <tr key={userData._id}>
+                  <td className="p-2">{userData.username}</td>
+                  <td className="p-2">{userData.email}</td>
+                  <td className="p-2">{userData.bananaCount}</td>
                   <td className="p-2">
-                    {user.isActive ? "Active" : "Inactive"}
+                    {userData.isActive ? "Active" : "Inactive"}
                   </td>
                   <td className="p-2">
                     <button
-                      onClick={() => handleEdit(user)}
+                      onClick={() => handleEdit(userData)}
                       className="bg-yellow-500 text-white p-1 rounded mr-2 hover:bg-yellow-600"
+                      disabled={userData._id === user?.id}
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(user._id)}
-                      className="bg-red-500 text-white p-1 rounded mr-2 hover:bg-red-600"
+                      onClick={() => handleDelete(userData._id)}
+                      className={`p-1 rounded mr-2 text-white ${
+                        userData._id === user?.id
+                          ? "bg-red-300 cursor-not-allowed"
+                          : "bg-red-500 hover:bg-red-600"
+                      }`}
+                      disabled={userData._id === user?.id}
                     >
                       Delete
                     </button>
-                    {user.isBlocked ? (
+                    {userData.isBlocked ? (
                       <button
-                        onClick={() => handleUnblock(user._id)}
+                        onClick={() => handleUnblock(userData._id)}
                         className="bg-green-500 text-white p-1 rounded hover:bg-green-600"
                       >
                         Unblock
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleBlock(user._id)}
-                        className="bg-orange-500 text-white p-1 rounded hover:bg-orange-600"
+                        onClick={() => handleBlock(userData._id)}
+                        className={`p-1 rounded text-white ${
+                          userData._id === user?.id
+                            ? "bg-orange-300 cursor-not-allowed"
+                            : "bg-orange-500 hover:bg-orange-600"
+                        }`}
+                        disabled={userData._id === user?.id}
                       >
                         Block
                       </button>
